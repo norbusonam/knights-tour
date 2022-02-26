@@ -15,6 +15,8 @@ function KnightsTour() {
   const resetBoard = (width, height) => {
     setWidth(width);
     setHeight(height);
+    setRow(null);
+    setCol(null);
     const newBoard = [];
     for (let i = 0; i < height; i++) {
       newBoard.push([]);
@@ -25,19 +27,20 @@ function KnightsTour() {
     setBoard(newBoard);
   }
 
-  const successorFunction = () => {
+  const successorFunction = (r, c) => {
     const possibleMoves = [];
-    if (isValid(row + 2, col + 1)) possibleMoves.push([row + 2, col + 1]);
-    if (isValid(row - 2, col - 1)) possibleMoves.push([row - 2, col - 1]);
-    if (isValid(row - 2, col + 1)) possibleMoves.push([row - 2, col + 1]);
-    if (isValid(row + 2, col - 1)) possibleMoves.push([row + 2, col - 1]);
-    if (isValid(row + 1, col + 2)) possibleMoves.push([row + 1, col + 2]);
-    if (isValid(row - 2, col - 2)) possibleMoves.push([row - 1, col - 2]);
-    if (isValid(row + 1, col - 2)) possibleMoves.push([row + 1, col - 2]);
-    if (isValid(row - 1, col + 2)) possibleMoves.push([row - 1, col + 2]);
+    if (isValid(r + 2, c + 1)) possibleMoves.push([r + 2, c + 1]);
+    if (isValid(r - 2, c - 1)) possibleMoves.push([r - 2, c - 1]);
+    if (isValid(r - 2, c + 1)) possibleMoves.push([r - 2, c + 1]);
+    if (isValid(r + 2, c - 1)) possibleMoves.push([r + 2, c - 1]);
+    if (isValid(r + 1, c + 2)) possibleMoves.push([r + 1, c + 2]);
+    if (isValid(r - 2, c - 2)) possibleMoves.push([r - 1, c - 2]);
+    if (isValid(r + 1, c - 2)) possibleMoves.push([r + 1, c - 2]);
+    if (isValid(r - 1, c + 2)) possibleMoves.push([r - 1, c + 2]);
+    return possibleMoves;
   }
 
-  const applySuccessor = () => {
+  const applySuccessors = (successors) => {
     // remove previous successors
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
@@ -47,18 +50,21 @@ function KnightsTour() {
       }
     }
     // add new successors to board
-    const possibleMoves = successorFunction();
-    possibleMoves.forEach((i, j) => {
-      board[i][j] = 'VISITABLE';
+    successors.forEach(successor => {
+      board[successor[0]][successor[1]] = 'VISITABLE';
     });
   }
 
   const makeMove = (r, c) => {
-    board[r][c] = 'VISITED';
-    setRow(r);
-    setCol(c);
-    board[r][c] = 'CURRENT';
-    applySuccessor();
+    if (board[r][c] == 'VISITABLE') {
+      if (row != null && col != null) 
+        board[row][col] = 'VISITED';
+      board[r][c] = 'CURRENT';
+      const successors = successorFunction(r, c);
+      applySuccessors(successors);
+      setRow(r);
+      setCol(c);
+    }
   }
 
   return (
@@ -90,15 +96,22 @@ function KnightsTour() {
         {
           board.map((row, i) => {
             return row.map((state, j) => {
-              let key = `${i}${j}`
-              if (state === 'VISITABLE') 
-                return <div key={key}>VA</div>
-              else if (state === 'VISITED') 
-                return <div key={key}>VD</div>
-              else if (state === 'UNVISITABLE') 
-                return <div key={key}>UV</div>
-              else if (state ==='CURRENT') 
-                return <div key={key}>CU</div>
+              let key = `${i}${j}`;
+              let style = { 
+                paddingTop: '100%', 
+                margin: 0,
+              };
+              if (state === 'VISITABLE') style.backgroundColor = 'green';
+              if (state === 'UNVISITABLE') style.backgroundColor = 'white';
+              if (state === 'CURRENT') style.backgroundColor = 'lightgreen';
+              if (state === 'VISITED') style.backgroundColor = 'grey';
+              return (
+                <div 
+                  key={key} 
+                  style={style} 
+                  onClick={() => makeMove(i, j)}>
+                </div>
+              )
             })
           })
         }
