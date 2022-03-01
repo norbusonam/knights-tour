@@ -1,15 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+const VISITED = 'VISITED';
+const CURRENT = 'CURRENT';
+const UNVISITABLE = 'UNVISITABLE';
+const VISITABLE = 'VISITABLE'
+const INITIAL_HEIGHT = 8;
+const INITIAL_WIDTH = 8;
+const INITIAL_BOARD = [[VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
+                       [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],];
+
 
 function KnightsTour() {
 
-  const [height, setHeight] = useState(8);
-  const [width, setWidth] = useState(8);
+  const [height, setHeight] = useState(INITIAL_HEIGHT);
+  const [width, setWidth] = useState(INITIAL_WIDTH);
   const [row, setRow] = useState(null);
   const [col, setCol] = useState(null);
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState(INITIAL_BOARD);
 
   const isValid = (r, c) => {
-    return r >= 0 && r < height && c >= 0 && c < width && board[r][c] !== 'VISITED';
+    return r >= 0 && r < height && c >= 0 && c < width && board[r][c] !== VISITED;
   }
 
   const resetBoard = (width, height) => {
@@ -21,7 +37,7 @@ function KnightsTour() {
     for (let i = 0; i < height; i++) {
       newBoard.push([]);
       for (let j = 0; j < width; j++) {
-        newBoard[i].push("VISITABLE");
+        newBoard[i].push(VISITABLE);
       }
     }
     setBoard(newBoard);
@@ -44,22 +60,22 @@ function KnightsTour() {
     // remove previous successors
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        if (board[i][j] === 'VISITABLE') {
-          board[i][j] = 'UNVISITABLE'
+        if (board[i][j] === VISITABLE) {
+          board[i][j] = UNVISITABLE
         }
       }
     }
     // add new successors to board
     successors.forEach(successor => {
-      board[successor[0]][successor[1]] = 'VISITABLE';
+      board[successor[0]][successor[1]] = VISITABLE;
     });
   }
 
   const makeMove = (r, c) => {
-    if (board[r][c] == 'VISITABLE') {
+    if (board[r][c] === VISITABLE) {
       if (row != null && col != null) 
-        board[row][col] = 'VISITED';
-      board[r][c] = 'CURRENT';
+        board[row][col] = VISITED;
+      board[r][c] = CURRENT;
       const successors = successorFunction(r, c);
       applySuccessors(successors);
       setRow(r);
@@ -101,10 +117,10 @@ function KnightsTour() {
                 paddingTop: '100%', 
                 margin: 0,
               };
-              if (state === 'VISITABLE') style.backgroundColor = 'green';
-              if (state === 'UNVISITABLE') style.backgroundColor = 'white';
-              if (state === 'CURRENT') style.backgroundColor = 'lightgreen';
-              if (state === 'VISITED') style.backgroundColor = 'grey';
+              if (state === VISITABLE) style.backgroundColor = 'green';
+              if (state === UNVISITABLE) style.backgroundColor = 'white';
+              if (state === CURRENT) style.backgroundColor = 'lightgreen';
+              if (state === VISITED) style.backgroundColor = 'grey';
               return (
                 <div 
                   key={key} 
