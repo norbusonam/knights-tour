@@ -4,8 +4,7 @@ const VISITED = 'VISITED';
 const CURRENT = 'CURRENT';
 const UNVISITABLE = 'UNVISITABLE';
 const VISITABLE = 'VISITABLE'
-const INITIAL_HEIGHT = 8;
-const INITIAL_WIDTH = 8;
+const INITIAL_BOARD_SIZE = 8;
 const INITIAL_BOARD = [[VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
                        [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
                        [VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE],
@@ -18,25 +17,23 @@ const INITIAL_BOARD = [[VISITABLE, VISITABLE, VISITABLE, VISITABLE, VISITABLE, V
 
 function KnightsTour() {
 
-  const [height, setHeight] = useState(INITIAL_HEIGHT);
-  const [width, setWidth] = useState(INITIAL_WIDTH);
+  const [boardSize, setBoardSize] = useState(INITIAL_BOARD_SIZE);
   const [row, setRow] = useState(null);
   const [col, setCol] = useState(null);
   const [board, setBoard] = useState(INITIAL_BOARD);
 
   const isValid = (r, c) => {
-    return r >= 0 && r < height && c >= 0 && c < width && board[r][c] !== VISITED;
+    return r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] !== VISITED;
   }
 
-  const resetBoard = (width, height) => {
-    setWidth(width);
-    setHeight(height);
+  const resetBoard = (newBoardSize) => {
+    setBoardSize(newBoardSize);
     setRow(null);
     setCol(null);
     const newBoard = [];
-    for (let i = 0; i < height; i++) {
+    for (let i = 0; i < newBoardSize; i++) {
       newBoard.push([]);
-      for (let j = 0; j < width; j++) {
+      for (let j = 0; j < newBoardSize; j++) {
         newBoard[i].push(VISITABLE);
       }
     }
@@ -50,7 +47,7 @@ function KnightsTour() {
     if (isValid(r - 2, c + 1)) possibleMoves.push([r - 2, c + 1]);
     if (isValid(r + 2, c - 1)) possibleMoves.push([r + 2, c - 1]);
     if (isValid(r + 1, c + 2)) possibleMoves.push([r + 1, c + 2]);
-    if (isValid(r - 2, c - 2)) possibleMoves.push([r - 1, c - 2]);
+    if (isValid(r - 1, c - 2)) possibleMoves.push([r - 1, c - 2]);
     if (isValid(r + 1, c - 2)) possibleMoves.push([r + 1, c - 2]);
     if (isValid(r - 1, c + 2)) possibleMoves.push([r - 1, c + 2]);
     return possibleMoves;
@@ -58,8 +55,8 @@ function KnightsTour() {
 
   const applySuccessors = (successors) => {
     // remove previous successors
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
         if (board[i][j] === VISITABLE) {
           board[i][j] = UNVISITABLE
         }
@@ -85,27 +82,12 @@ function KnightsTour() {
 
   return (
     <div>
-      <label>Board Dimensions</label>
       <br />
-      <input 
-        type='number'
-        min={3}
-        max={10} 
-        value={width} 
-        onChange={e => resetBoard(e.target.value, height) }
-      />
-      X
-      <input 
-        type='number'
-        min={3}
-        max={10} 
-        value={height} 
-        onChange={e => resetBoard(width, e.target.value) }
-      />
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${width}, 1fr)`,
+          gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
+          border: '1px black solid',
           gap: 0,
         }}  
       >
@@ -116,6 +98,7 @@ function KnightsTour() {
               let style = { 
                 paddingTop: '100%', 
                 margin: 0,
+                border: '1px black solid',
               };
               if (state === VISITABLE) style.backgroundColor = 'green';
               if (state === UNVISITABLE) style.backgroundColor = 'white';
@@ -132,6 +115,16 @@ function KnightsTour() {
           })
         }
       </div>
+
+      board size = 
+      <input 
+        type='number'
+        min={3}
+        max={10} 
+        value={boardSize} 
+        onChange={e => resetBoard(e.target.value) }
+      />
+
     </div>
   );
 }
