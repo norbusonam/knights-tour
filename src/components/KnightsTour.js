@@ -118,7 +118,7 @@ function KnightsTour() {
 
       <br />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ paddingLeft: '1rem' }}>
+        <div style={{ paddingLeft: '0.5rem', flexGrow: 4 }}>
           board size = &nbsp;
           <input 
             type='number'
@@ -128,7 +128,7 @@ function KnightsTour() {
             onChange={e => resetBoard(e.target.value) }
           />
         </div>
-        <div style={{ paddingRight: '1rem' }}>
+        <div style={{ paddingRight: '0.5rem' }}>
           <button onClick={() => resetBoard(boardSize)}>Reset</button>
         </div>
       </div>
