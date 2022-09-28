@@ -116,14 +116,22 @@ function KnightsTour() {
         }
       </div>
 
-      board size = 
-      <input 
-        type='number'
-        min={3}
-        max={10} 
-        value={boardSize} 
-        onChange={e => resetBoard(e.target.value) }
-      />
+      <br />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ paddingLeft: '1rem' }}>
+          board size = &nbsp;
+          <input 
+            type='number'
+            min={3}
+            max={10} 
+            value={boardSize} 
+            onChange={e => resetBoard(e.target.value) }
+          />
+        </div>
+        <div style={{ paddingRight: '1rem' }}>
+          <button onClick={() => resetBoard(boardSize)}>Reset</button>
+        </div>
+      </div>
 
     </div>
   );
